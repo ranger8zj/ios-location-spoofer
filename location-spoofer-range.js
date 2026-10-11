@@ -15,8 +15,8 @@
   var DEFAULT_CONFIG = {
     enabled: true,
     mode: "response",
-    latitude: 31.24100,
-    longitude: 121.66800,
+    latitude: 31.24300,
+    longitude: 121.66330,
     horizontalAccuracy: 39,
     verticalAccuracy: 1000,
     altitude: 530,
@@ -1450,11 +1450,11 @@
         function randomBetween(min, max) {
           return min + Math.random() * (max - min);
         }
-        const LAT_MIN = 31.23900;
-        const LAT_MAX = 31.24100;
+        const LAT_MIN = 31.24290;
+        const LAT_MAX = 31.24300;
       
-        const LNG_MIN = 121.66800;
-        const LNG_MAX = 121.66900;
+        const LNG_MIN = 121.66320;
+        const LNG_MAX = 121.66330;
         saved = {
           lat: Number(randomBetween(LAT_MIN, LAT_MAX).toFixed(6)),
           lng: Number(randomBetween(LNG_MIN, LNG_MAX).toFixed(6))
