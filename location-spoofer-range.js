@@ -1450,11 +1450,11 @@
         function randomBetween(min, max) {
           return min + Math.random() * (max - min);
         }
-        const LAT_MIN = 31.24220;
+        const LAT_MIN = 31.24150;
         const LAT_MAX = 31.24300;
       
         const LNG_MIN = 121.66320;
-        const LNG_MAX = 121.66380;
+        const LNG_MAX = 121.66500;
         saved = {
           lat: Number(randomBetween(LAT_MIN, LAT_MAX).toFixed(6)),
           lng: Number(randomBetween(LNG_MIN, LNG_MAX).toFixed(6))
