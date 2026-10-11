@@ -11,29 +11,12 @@
  */
 (function () {
   "use strict";
-  const LAT_MIN = 31.23900;
-  const LAT_MAX = 31.24150;
 
-  const LNG_MIN = 121.66800;
-  const LNG_MAX = 121.66930;
-
-  function randomBetween(min, max) {
-      return min + Math.random() * (max - min);
-  }
-
-  const latitude = Number(
-      randomBetween(LAT_MIN, LAT_MAX).toFixed(6)
-  );
-
-  const longitude = Number(
-      randomBetween(LNG_MIN, LNG_MAX).toFixed(6)
-  );
-  
   var DEFAULT_CONFIG = {
     enabled: true,
     mode: "response",
-    latitude: latitude,
-    longitude: longitude,
+    latitude: 31.24150,
+    longitude: 121.66800,
     horizontalAccuracy: 39,
     verticalAccuracy: 1000,
     altitude: 530,
@@ -1444,6 +1427,57 @@
     var configUrl = resolveConfigUrl(args);
     var debug = parseBoolean(cfg.debug, false);
     var address = String(args.address || "").trim();
+
+    // 随机坐标：首次生成后保存，后续请求复用
+    if (String(args.randomize || "false") === "true") {
+      var storeKey = "ios_location_random_coords";
+      var saved = null;
+    
+      try {
+        if (typeof $persistentStore !== "undefined") {
+          var raw = $persistentStore.read(storeKey);
+          if (raw) saved = JSON.parse(raw);
+        }
+      } catch (e) {
+        saved = null;
+      }
+    
+      if (
+        !saved ||
+        !Number.isFinite(Number(saved.lat)) ||
+        !Number.isFinite(Number(saved.lng))
+      ) {
+        function randomBetween(min, max) {
+          return min + Math.random() * (max - min);
+        }
+        const LAT_MIN = 31.23900;
+        const LAT_MAX = 31.24150;
+      
+        const LNG_MIN = 121.66800;
+        const LNG_MAX = 121.66930;
+        saved = {
+          lat: Number(randomBetween(LAT_MIN, LAT_MAX).toFixed(6)),
+          lng: Number(randomBetween(LNG_MIN, LNG_MAX).toFixed(6))
+        };
+    
+        try {
+          if (
+            typeof $persistentStore !== "undefined" &&
+            $persistentStore.write
+          ) {
+            $persistentStore.write(storeKey, JSON.stringify(saved));
+          }
+        } catch (e) {}
+      }
+    
+      cfg.latitude = Number(saved.lat);
+      cfg.longitude = Number(saved.lng);
+    
+      console.log(
+        "Location spoofer random coordinates: " +
+        cfg.latitude + "," + cfg.longitude
+      );
+    }
 
     applyAddressFromCache(cfg, address, debug);
 
